@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using MauiSupervisionApp.Data;
+using MudBlazor.Services;
+using MauiSupervisionApp.Exceptions.Services;
+using MauiSupervisionApp.Exceptions.Helpers;
 
 namespace MauiSupervisionApp;
 
@@ -22,7 +25,9 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
-		builder.Services.AddSingleton<WeatherForecastService>();
+		builder.Services.AddExceptionManagement();
+    
+    builder.Services.AddSingleton<WeatherForecastService>();
 
 		return builder.Build();
 	}

@@ -4,4 +4,13 @@
 
 Welcome to your new app.
 
+<button class="btn btn-primary" @onclick="TriggerException">Trigger Exception</button>
+
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+  private void TriggerException()
+  {
+    throw new InvalidOperationException("My exception is thrown");
+  }
+}
