@@ -12,56 +12,31 @@ namespace MauiSupervisionApp.Exceptions.Pages;
 /// </summary>
 public partial class CustomErrorBoundary
 {
-  private readonly List<Exception> _receivedExceptions = new();
-  private int _nbOfRetries = 0;
+  private readonly List<Exception> _reentrantExceptions = new();
 
   [Inject]
   private ILogService? LogService { get; set; }
 
-  //[Inject]
-  //private IHttpClientFactory? ClientFactory { get; set; } // TODO - ACE: change to Proxy layer 
-
-  protected string GetMessageContent(Exception exception)
+  protected string GetRawHtmlMessageContent(Exception exception)
   {
     Guard.IsNotNull(exception);
     Guard.IsNotNull(LogService);
 
-    return LogService.GetMessageContent(exception);
+    return LogService.GetRawHtmlMessageContent(exception);
   }
 
   protected override async Task OnErrorAsync(Exception exception)
   {
     Guard.IsNotNull(exception);
     Guard.IsNotNull(LogService);
-    //Guard.IsNotNull(ClientFactory);
 
-    var log = LogService.Notify(exception);
-
-    // Add current exception to all received exceptions
-    _receivedExceptions.Add(exception);
+    var log = await LogService.NotifyAsync(exception);
     await base.OnErrorAsync(exception);
-
-    //try
-    //{
-    //  CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(10000);
-    //  var httpClient = ClientFactory.CreateClient();
-    //  await httpClient.PostObjectAsync<LogVO>(log, "Log", cancellationTokenSource.Token);
-    //}
-    //catch (Exception)
-    //{
-    //  // Do nothing for the moment
-    //}
   }
 
   public void Reset()
   {
-    _nbOfRetries = 0;
-    _receivedExceptions.Clear();
-  }
-
-  public new void Recover()
-  {
-    Reset();
+    _reentrantExceptions.Clear();
     base.Recover();
   }
 }

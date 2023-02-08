@@ -11,7 +11,7 @@ namespace MauiSupervisionApp.Exceptions.Helpers;
 /// <summary>
 /// Extension methods for setting up exceptions services in an <see cref="IServiceCollection" />.
 /// </summary>
-public static class ExceptionManagementServiceCollectionExtensions
+public static class ExceptionServiceCollectionExtensions
 {
   /// <summary>
   /// Adds services required for application localization.
@@ -25,7 +25,7 @@ public static class ExceptionManagementServiceCollectionExtensions
     services.TryAdd(services.AddLocalization());
     services.TryAdd(services.AddMudServices());
 
-    services.AddScoped<ILogService, SnackbarService>();
+    services.AddScoped<ILogService, AlertService>();
 
 
     return services;

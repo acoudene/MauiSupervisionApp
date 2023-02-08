@@ -10,17 +10,14 @@ using MudBlazor;
 
 namespace MauiSupervisionApp.Exceptions.Services;
 
-public class SnackbarService : ILogService
-{
-  private readonly ISnackbar _snackbar;
+public class AlertService : ILogService
+{  
   private readonly IStringLocalizer<LogResource> _stringLocalizer;
 
-  public SnackbarService(ISnackbar snackbar, IStringLocalizer<LogResource> stringLocalizer)
+  public AlertService(IStringLocalizer<LogResource> stringLocalizer)
   {
-    Guard.IsNotNull(snackbar);
     Guard.IsNotNull(stringLocalizer);
 
-    _snackbar = snackbar;
     _stringLocalizer = stringLocalizer;
   }
 
@@ -45,10 +42,41 @@ public class SnackbarService : ILogService
     return log;
   }
 
-  public string GetStringMessageContent(Exception exception) => GetRawHtmlMessageContent(GenerateLog(exception));
-  public string GetRawHtmlMessageContent(Exception exception) => GetRawHtmlMessageContent(GenerateLog(exception));
+  public string GetStringMessageContent(Exception exception) => GetStringMessageContent(GenerateLog(exception));
 
-  public string GetStringMessageContent(LogVO log) => GetRawHtmlMessageContent(log);
+  public string GetStringMessageContent(LogVO log)
+  {
+    Guard.IsNotNull(log);
+
+    string categoryName = log.CategoryName ?? nameof(Exception);
+
+    string title = log.Message ?? categoryName;
+    string innerCategoryName = log.InnerCategoryName ?? string.Empty;
+
+    string id = log.Id.ToString();
+
+    // Set dedicated message following to environment
+    bool isDevelopment = true;
+    string message = !isDevelopment
+    ?
+        $"{title}\n" +
+        $"{_stringLocalizer[categoryName]}\n" +
+        $"<li>{_stringLocalizer["Category"]}: {categoryName}\n" +
+        $"{_stringLocalizer["Identifier"]}: {id}\n" +
+        $"{_stringLocalizer["Contact support"]}\n"
+    :
+        $"{title}\n" +
+        $"{_stringLocalizer[categoryName]}\n" +
+        $"{_stringLocalizer["Category"]}: {categoryName}\n" +
+        $"{_stringLocalizer["InnerCategory"]}: {innerCategoryName}\n" +
+        $"{_stringLocalizer["Identifier"]}: {id}\n" +
+        $"{string.Join("|", log.ExceptionMessages)}\n" + // Dev
+        $"{_stringLocalizer["See logs"]} / {_stringLocalizer["Contact support"]}\n" // Dev
+    ;
+    return message;
+  }
+
+  public string GetRawHtmlMessageContent(Exception exception) => GetRawHtmlMessageContent(GenerateLog(exception));
 
   public string GetRawHtmlMessageContent(LogVO log)
   {
@@ -88,22 +116,19 @@ public class SnackbarService : ILogService
 
   public Task<LogVO> NotifyAsync(Exception exception) => NotifyAsync(GenerateLog(exception));
 
-  public Task<LogVO> NotifyAsync(LogVO log)
+  public async Task<LogVO> NotifyAsync(LogVO log)
   {
     Guard.IsNotNull(log);
 
     string message = GetStringMessageContent(log);
 
     // Create the notification with error options
-    _snackbar.Add(message, Severity.Error, options =>
-    {
-      options.ShowCloseIcon = true;
-      options.VisibleStateDuration = 60000;
-      options.HideTransitionDuration = 500;
-      options.ShowTransitionDuration = 500;
-      options.SnackbarVariant = Variant.Filled;
-    });
+    var mainPage = Application.Current?.MainPage;
+    if (mainPage == null)
+      return log;
 
-    return Task.FromResult(log);
+    await mainPage.DisplayAlert(_stringLocalizer["Error"], message, _stringLocalizer["Ok"]);
+
+    return log;
   }
 }

@@ -126,6 +126,12 @@
   <data name="Contact support" xml:space="preserve">
     <value>Contact support</value>
   </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifier</value>
   </data>

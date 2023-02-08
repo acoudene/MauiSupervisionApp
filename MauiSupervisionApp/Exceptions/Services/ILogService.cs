@@ -9,9 +9,12 @@ public interface ILogService
 {
   LogVO GenerateLog(Exception exception);
 
-  string GetMessageContent(LogVO log);
-  string GetMessageContent(Exception exception);
+  string GetStringMessageContent(LogVO log);
+  string GetStringMessageContent(Exception exception);
 
-  LogVO Notify(LogVO log);
-  LogVO Notify(Exception exception);
+  string GetRawHtmlMessageContent(LogVO log);
+  string GetRawHtmlMessageContent(Exception exception);
+
+  Task<LogVO> NotifyAsync(LogVO log);
+  Task<LogVO> NotifyAsync(Exception exception);
 }

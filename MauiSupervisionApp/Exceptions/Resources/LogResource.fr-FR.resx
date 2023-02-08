@@ -126,6 +126,12 @@
   <data name="Contact support" xml:space="preserve">
     <value>Si le problème persiste, veuillez noter le contexte de survenue et contacter le support d'Alteva en indiquant l'identifiant d'erreur suivant : {0}</value>
   </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuer</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
   <data name="Identifier" xml:space="preserve">
     <value>Identifiant</value>
   </data>

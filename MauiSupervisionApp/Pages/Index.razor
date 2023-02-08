@@ -4,13 +4,19 @@
 
 Welcome to your new app.
 
-<button class="btn btn-primary" @onclick="TriggerException">Trigger Exception</button>
+<button class="btn btn-primary" @onclick="TriggerInvalidOperationException">Trigger Invalid Operation Exception</button>
+<button class="btn btn-primary" @onclick="TriggerCustomException">Trigger Custom Exception</button>
 
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 @code {
-  private void TriggerException()
+  private void TriggerInvalidOperationException()
   {
-    throw new InvalidOperationException("My exception is thrown");
+    throw new InvalidOperationException($"My invalid operation exception is thrown from {nameof(Index)} page");
+  }
+
+  private void TriggerCustomException()
+  {
+    throw new CustomException($"My custom exception is thrown from {nameof(Index)} page");
   }
 }
