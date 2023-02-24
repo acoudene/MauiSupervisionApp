@@ -20,7 +20,7 @@ En quelques mots, le principe est simple :
 - Les logs peuvent être remontés jusqu'au serveur si on le souhaite (support) mais mécanisme non activé par défaut.
 - Un **système de protection** est mis en place au cas où une exception serait générée lors du mécanisme du chargement de la page afin d'éviter une réentrance infinie. En effet, sans cela, ce mécanisme bouclerait car on souhaite afficher la page avec une boite de notification (note : implémentation découplée et donc interchangeable)
 
-![Error Management in MAUI - Client Exception Mechanism.png](/.attachments/Error%20Management%20in%20MAUI%20-%20Client%20Exception%20Mechanism-3ffd41f7-5b69-46b6-96d2-513b111a4c72.png)
+![Image.png](/Images/01_Item.png)
 
 # Organisation du code du modèle
 
@@ -47,13 +47,13 @@ services.AddScoped<ILogService, SnackbarService>();
 
 Le CustomErrorBoundary s'intègre directement dans **Main.razor** sous forme de "tag englobant".
 
-![image.png](/.attachments/image-4ad0f00d-8c61-4a9a-a474-2ba3d4f7c86b.png)
+![Image.png](/Images/02_Item.png)
 
 ## Organisation des classes
 
 Toutes les classes sont découpées, classées et réparties à l'intérieur du **crosscutting** (=élément transverse) de gestion des Exceptions.
 
-![image.png](/.attachments/image-60626585-aa17-4ee0-bc32-1b57a031ae2a.png)
+![Image.png](/Images/03_Item.png)
 
 ## Création de catégories d'erreur/d'exception
 
@@ -62,7 +62,7 @@ Chaque classe d'exception devra dériver de **LoggedExceptionBase** en respectan
 
 Exemple
 
-![image.png](/.attachments/image-965a2b4c-f40f-4c37-9da9-e167dcbb53b2.png)
+![Image.png](/Images/04_Item.png)
 
 ### Globalization
 
@@ -71,23 +71,23 @@ Le principe est simple, le nom de la classe d'exception doit être reporté dans
 
 Exemple en français
 
-![image.png](/.attachments/image-367cfd21-71c8-47d4-93dd-7f76bff8d1ec.png)
+![Image.png](/Images/05_Item.png)
 
 ### Contenu du Log
 
 Le contenu du Log côté client est géré par un objet de type **LogVO** (stocké dans le répertoire Models de Exceptions pour respecter la nomenclature MVVM)
 
-![image.png](/.attachments/image-cb2c9765-0d0f-47ae-a5dd-5adab71fb91f.png)
+![Image.png](/Images/06_Item.png)
 
 Ces champs peuvent être enrichis ou modifiés en lien avec les classes d'implémentation de ILogService.
 
 Exemple avec **AlertService** 
 
-![image.png](/.attachments/image-a5864543-844c-4a8f-b82b-ae709ddf8255.png)
+![Image.png](/Images/07_Item.png)
 
 Avec l'exploitation du contenu directement dans un DisplayAlert MAUI 
 
-![image.png](/.attachments/image-0fb80d99-21fd-423b-8255-beb335413e28.png)
+![Image.png](/Images/08_Item.png)
 
 # Annexe
 
